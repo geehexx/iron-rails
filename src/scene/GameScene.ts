@@ -1,10 +1,10 @@
 import Phaser from 'phaser'
-import { World, defineComponent, Types, addEntity, addComponent, createWorld } from 'bitecs'
+import { defineComponent, Types, addEntity, addComponent, createWorld, IWorld } from 'bitecs'
 
 const Position = defineComponent({ x: Types.f32, y: Types.f32 })
 
 export class GameScene extends Phaser.Scene {
-  private world!: World
+  private world!: IWorld
 
   constructor() {
     super({ key: 'GameScene' })
