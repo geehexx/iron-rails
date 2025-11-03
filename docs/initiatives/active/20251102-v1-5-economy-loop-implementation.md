@@ -27,7 +27,7 @@ To build upon the V1.0 prototype by introducing the full "Run → Upgrade → Ru
 
 ### In Scope
 
--   Implementation of all features as defined in the "Phase 1: Resource and Economy (V1.5)" section of `02_Future_Versions.md`.
+-   Implementation of all features as defined in the "Phase 1: Resource and Economy (V1.5)" section of `02-future-versions.md`.
 -   Creating a simple data persistence mechanism (e.g., using browser `localStorage`) to save player upgrades between sessions.
 -   A new `UpgradeScene` in the Phaser project.
 -   UI elements for displaying and purchasing upgrades.

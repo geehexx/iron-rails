@@ -1,0 +1,23 @@
+ls:
+  docs/adr:
+    .md: kebab-case
+  docs/gdd:
+    .md: kebab-case
+  docs/technical_analysis:
+    .md: kebab-case
+  docs/initiatives/active:
+    .md: kebab-case
+  docs/initiatives/completed:
+    .md: kebab-case
+  docs/initiatives/deferred:
+    .md: kebab-case
+
+ignore:
+  - node_modules
+  - README.md
+  - AGENTS.md
+  - docs/README.md
+  - docs/adr/README.md
+  - docs/initiatives/README.md
+  - docs/adr/template.md
+  - docs/initiatives/template.md

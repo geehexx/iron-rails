@@ -1,0 +1,14 @@
+{
+  "config": {
+    "default": true,
+    "no-hard-tabs": false,
+    "whitespace": false,
+    "line-length": false
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "node_modules"
+  ]
+}

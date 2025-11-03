@@ -1,0 +1,39 @@
+{
+  "name": "iron-rails",
+  "version": "0.1.0",
+  "description": "A 2D side-scrolling auto-battler game.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "npm run lint:ls && npm run lint:md",
+    "lint:ls": "ls-lint",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geehexx/iron-rails.git"
+  },
+  "keywords": [
+    "gdd",
+    "game-development"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geehexx/iron-rails/issues"
+  },
+  "homepage": "https://github.com/geehexx/iron-rails#readme",
+  "devDependencies": {
+    "@ls-lint/ls-lint": "^2.3.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "markdownlint-cli2": "^0.18.1"
+  },
+  "lint-staged": {
+    "*.md": [
+      "npm run lint:md",
+      "npm run lint:ls"
+    ]
+  }
+}

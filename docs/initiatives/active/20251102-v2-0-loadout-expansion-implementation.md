@@ -27,7 +27,7 @@ To introduce horizontal progression and deeper strategic choice by allowing play
 
 ### In Scope
 
--   Implementation of all features as defined in the "Phase 2: Building and Loadout (V2.0)" section of `02_Future_Versions.md`.
+-   Implementation of all features as defined in the "Phase 2: Building and Loadout (V2.0)" section of `02-future-versions.md`.
 -   Refactoring the `Train` object to be a collection of `TrainCar` objects.
 -   A drag-and-drop or similar UI for managing weapon loadouts.
 -   Creating the `Bloater` and `Runner` enemy classes with their unique behaviors.

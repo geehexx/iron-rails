@@ -27,7 +27,7 @@ To introduce "build-defining" RPG elements that dramatically alter playstyles. T
 
 ### In Scope
 
--   Implementation of all features as defined in the "Phase 3: Power Fantasy RPG Elements (V3.0)" section of `02_Future_Versions.md`.
+-   Implementation of all features as defined in the "Phase 3: Power Fantasy RPG Elements (V3.0)" section of `02-future-versions.md`.
 -   A new system for applying passive, global buffs or behavior changes to the train based on equipped modules.
 -   Refactoring the weapon targeting system to support different AI modes.
 

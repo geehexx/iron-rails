@@ -29,7 +29,7 @@ To build the initial, "zero-player" V1.0 prototype of the Iron Rails game. The p
 ### In Scope
 
 -   Setting up the initial project structure, build tools, and dependencies (Phaser, Vite, Vitest).
--   Implementation of all game components as defined in the `01_V1_Core_Prototype.md` document.
+-   Implementation of all game components as defined in the `01-v1-core-prototype.md` document.
 -   Basic visual and audio feedback ("juice") for key events like collisions and weapon fire.
 
 ### Out of Scope
