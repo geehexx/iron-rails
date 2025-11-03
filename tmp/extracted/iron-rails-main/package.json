@@ -1,0 +1,32 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Iron Rails is a 2D side-scrolling auto-battler web game where you manage a steampunk train fighting through a zombie apocalypse.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geehexx/iron-rails.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/geehexx/iron-rails/issues"
+  },
+  "homepage": "https://github.com/geehexx/iron-rails#readme",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "markdownlint-cli2": "^0.18.1"
+  },
+  "lint-staged": {
+    "**/*.md": "markdownlint-cli2 --fix"
+  }
+}
