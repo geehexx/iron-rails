@@ -25,7 +25,7 @@ We will use **bitecs** as the project's official ECS library.
 
 - **Positive:**
   - Game logic will be implemented as data-oriented systems, which will be easier to test and reason about.
-  - The performance characteristics of bitecs will help us achieve our goal of supporting a large number of entities.
+  - The performance characteristics of bitecs will help us achieve our goal of supporting numerous entities.
   - The small size of the library will help keep the final bundle size down.
 
 - **Negative:**

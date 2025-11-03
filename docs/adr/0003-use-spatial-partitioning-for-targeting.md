@@ -17,7 +17,7 @@ With potentially hundreds of enemies on screen, a naive `O(n)` search (iterating
 We will implement a **Spatial Partitioning** system using a simple uniform grid to optimize proximity queries for targeting. This system acts as a foundational optimization layer. A quadtree implementation will be considered as a future optimization if the uniform grid proves insufficient.
 
 - The game world will be divided into a grid of cells.
-- **Cell Size:** The cell size is defined in world units (e.g., 128 world pixels) and remains constant regardless of viewport size, resolution, or camera zoom. This preserves spatial coherence and predictable performance across devices. The exact value will be tuned via performance testing.
+- **Cell Size:** The cell size will be relative to the game's viewport size (e.g., `viewport.width / 10`), not a fixed pixel value. This ensures the partitioning scales correctly across different screen resolutions and devices. The exact ratio will be tuned via performance testing.
 - Each enemy will be registered to the cell it occupies.
 - Each turret will use its own world position as the origin for its query. This inherently supports turrets being located on different train cars.
 - When searching for potential targets, a turret will first check for enemies within its own grid cell and the 8 adjacent cells (a 3x3 area).

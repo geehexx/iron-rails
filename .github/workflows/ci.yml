@@ -1,5 +1,8 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,7 +12,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
+          cache: 'npm'
+      - run: npm ci --production=false --ignore-scripts
       - run: npm run lint
       - run: npm run build
-      - run: npm audit --audit-level=high
+      - run: npm run test
+      - run: npm audit --production --audit-level=high
