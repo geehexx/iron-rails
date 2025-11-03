@@ -74,4 +74,4 @@ To build upon the V1.0 prototype by introducing the full "Run → Upgrade → Ru
 
 ## 6. Related Documentation
 
--   **Game Design:** [02_Future_Versions.md](../../gdd/02_Future_Versions.md)
+-   **Game Design:** [02-future-versions.md](../../gdd/02-future-versions.md)

@@ -72,4 +72,4 @@ To introduce horizontal progression and deeper strategic choice by allowing play
 
 ## 6. Related Documentation
 
--   **Game Design:** [02_Future_Versions.md](../../gdd/02_Future_Versions.md)
+-   **Game Design:** [02-future-versions.md](../../gdd/02-future-versions.md)

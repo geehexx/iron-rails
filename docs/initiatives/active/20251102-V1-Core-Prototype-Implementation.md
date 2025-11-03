@@ -77,6 +77,6 @@ To build the initial, "zero-player" V1.0 prototype of the Iron Rails game. The p
 
 ## 6. Related Documentation
 
--   **Game Design:** [01_V1_Core_Prototype.md](../../gdd/01_V1_Core_Prototype.md)
+-   **Game Design:** [01-v1-core-prototype.md](../../gdd/01-v1-core-prototype.md)
 -   **Technical Stack:** [ADR-0001: Use Phaser, Vite, and Vitest Tech Stack](../../adr/0001-use-phaser-vite-vitest-stack.md)
 -   **Targeting Algorithm:** [ADR-0003: Use Spatial Partitioning for Targeting](../../adr/0003-use-spatial-partitioning-for-targeting.md)

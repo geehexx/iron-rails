@@ -7,21 +7,21 @@ Welcome to the central documentation hub for the Iron Rails project. This direct
 ### 1. Game Design Document (`/gdd`)
 This section contains the core design and vision for the game.
 
--   **[00_Game_Overview.md](./gdd/00_Game_Overview.md)**: The high-level concept, genre, and design pillars.
--   **[01_V1_Core_Prototype.md](./gdd/01_V1_Core_Prototype.md)**: The detailed specification for the initial, actionable prototype.
--   **[02_Future_Versions.md](./gdd/02_Future_Versions.md)**: The roadmap for iterative expansion (V1.5, V2.0, V3.0).
--   **[03_Key_Mechanics.md](./gdd/03_Key_Mechanics.md)**: A high-level overview of the core gameplay systems.
--   **[04_UI_UX_And_Feedback.md](./gdd/04_UI_UX_And_Feedback.md)**: Details on the user interface and the critical "juice" elements.
--   **[05_Future_Expansion.md](./gdd/05_Future_Expansion.md)**: A backlog of ideas for post-V3.0 content.
+-   **[00-game-overview.md](./gdd/00-game-overview.md)**: The high-level concept, genre, and design pillars.
+-   **[01-v1-core-prototype.md](./gdd/01-v1-core-prototype.md)**: The detailed specification for the initial, actionable prototype.
+-   **[02-future-versions.md](./gdd/02-future-versions.md)**: The roadmap for iterative expansion (V1.5, V2.0, V3.0).
+-   **[03-key-mechanics.md](./gdd/03-key-mechanics.md)**: A high-level overview of the core gameplay systems.
+-   **[04-ui-ux-and-feedback.md](./gdd/04-ui-ux-and-feedback.md)**: Details on the user interface and the critical "juice" elements.
+-   **[05-future-expansion.md](./gdd/05-future-expansion.md)**: A backlog of ideas for post-V3.0 content.
 
 ### 2. Technical Analysis (`/technical_analysis`)
 This section contains deep-dive research, analysis, and recommendations for key technical challenges.
 
--   **[01_Rendering_And_Performance.md](./technical_analysis/01_Rendering_And_Performance.md)**: Analysis of Canvas vs. DOM, the recommendation for the Phaser framework, and an example of Object Pooling.
--   **[02_Game_Physics_And_Formulas.md](./technical_analysis/02_Game_Physics_And_Formulas.md)**: A mathematical analysis of the core slowdown formula with stable alternatives.
--   **[03_AI_And_Algorithms.md](./technical_analysis/03_AI_And_Algorithms.md)**: Research into efficient "target closest" algorithms for the auto-targeting system.
--   **[04_UI_UX_Implementation.md](./technical_analysis/04_UI_UX_Implementation.md)**: Best practices for implementing a responsive, web-centric game HUD.
--   **[05_Recommended_Project_Setup.md](./technical_analysis/05_Recommended_Project_Setup.md)**: A guide to setting up a modern, efficient development environment with Phaser, Vite, and Vitest.
+-   **[01-rendering-and-performance.md](./technical_analysis/01-rendering-and-performance.md)**: Analysis of Canvas vs. DOM, the recommendation for the Phaser framework, and an example of Object Pooling.
+-   **[02-game-physics-and-formulas.md](./technical_analysis/02-game-physics-and-formulas.md)**: A mathematical analysis of the core slowdown formula with stable alternatives.
+-   **[03-ai-and-algorithms.md](./technical_analysis/03-ai-and-algorithms.md)**: Research into efficient "target closest" algorithms for the auto-targeting system.
+-   **[04-ui-ux-implementation.md](./technical_analysis/04-ui-ux-implementation.md)**: Best practices for implementing a responsive, web-centric game HUD.
+-   **[05-recommended-project-setup.md](./technical_analysis/05-recommended-project-setup.md)**: A guide to setting up a modern, efficient development environment with Phaser, Vite, and Vitest.
 
 ### 3. Project Initiatives (`/initiatives`)
 This section is for planning and tracking large-scale, multi-session work efforts.
