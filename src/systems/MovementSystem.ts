@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import { World } from '../ecs/World';
 import { SpatialGrid } from './SpatialGrid';
 
@@ -11,8 +12,8 @@ export class MovementSystem {
       entity.transform.x += entity.velocity.vx * deltaSeconds;
       entity.transform.y += entity.velocity.vy * deltaSeconds;
       
-      if (entity.sprite && 'setPosition' in entity.sprite && typeof entity.sprite.setPosition === 'function') {
-        (entity.sprite as any).setPosition(entity.transform.x, entity.transform.y);
+      if (entity.sprite && entity.sprite instanceof Phaser.GameObjects.Sprite) {
+        entity.sprite.setPosition(entity.transform.x, entity.transform.y);
       }
       
       spatialGrid.update(entity.id, entity.transform.x, entity.transform.y);

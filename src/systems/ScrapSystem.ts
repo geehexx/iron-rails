@@ -34,8 +34,13 @@ export class ScrapSystem {
 
     // Auto-destroy after lifetime
     scene.time.delayedCall(this.SCRAP_LIFETIME, () => {
-      if (world.entities.has(scrap.id)) {
+      const e = world.entities.get(scrap.id);
+      if (e) {
         spatialGrid.remove(scrap.id);
+        // Destroy visual if it exists
+        if (e.sprite && 'destroy' in e.sprite && typeof (e.sprite as any).destroy === 'function') {
+          (e.sprite as any).destroy();
+        }
         world.destroyEntity(scrap.id);
       }
     });
@@ -65,7 +70,12 @@ export class ScrapSystem {
 
       // Collect scrap
       onScrapCollected(entity.scrap.value);
+
+      // Remove from spatial index and destroy visual
       spatialGrid.remove(entityId);
+      if (entity.sprite && 'destroy' in entity.sprite && typeof (entity.sprite as any).destroy === 'function') {
+        (entity.sprite as any).destroy();
+      }
       world.destroyEntity(entityId);
     }
   }

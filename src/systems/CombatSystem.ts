@@ -12,10 +12,16 @@ export class CombatSystem {
   ) {}
 
   /**
-   * Set armor damage reduction (0.0 = 100% reduction, 1.0 = no reduction)
+   * Set armor damage reduction.
+   * @param armorValue - Armor value between 0.0 (no reduction) and 1.0 (100% reduction, immune).
+   *                     Values > 1.0 are capped at full immunity.
    */
   setArmor(armorValue: number): void {
-    this.armorMultiplier = Math.max(0, 1.0 - armorValue);
+    if (armorValue < 0) {
+      console.warn(`CombatSystem.setArmor: negative armorValue ${armorValue} clamped to 0`);
+      armorValue = 0;
+    }
+    this.armorMultiplier = Math.max(0, 1.0 - Math.min(armorValue, 1.0));
   }
 
   private explodeEnemy(x: number, y: number, world: World): void {

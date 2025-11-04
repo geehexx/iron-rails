@@ -7,14 +7,11 @@ describe('GameState', () => {
   beforeEach(() => {
     // Clear localStorage and create fresh instance
     localStorage.clear();
-    // Remove any saved game state
-    localStorage.removeItem('iron-rails-save');
     gameState = new GameState();
   });
 
   afterEach(() => {
     localStorage.clear();
-    localStorage.removeItem('iron-rails-save');
   });
 
   describe('Currency Management', () => {
