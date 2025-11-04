@@ -23,3 +23,14 @@ This project uses `markdownlint-cli2` to enforce a consistent style across all M
 - **/docs/adr/**: The immutable record of our key architectural decisions. This is **why** we build it the way we do.
 
 Your adherence to this structured approach is critical for the success of the project.
+
+## Pull Request Review Workflow
+
+When addressing feedback on a pull request, follow these steps:
+
+1.  **Read All Comments:** Thoroughly review all comments on the pull request to understand the feedback.
+2.  **Create a Plan:** Create a new plan that addresses all actionable feedback.
+3.  **Implement Changes:** Implement the necessary changes to address the feedback.
+4.  **Verify Changes:** Run all relevant checks (e.g., `npm run lint`, `npm run build`, `npm run test`) to ensure the changes are correct and do not introduce any new issues.
+5.  **Summarize and Reply:** Provide a summary of the changes made and reply to each comment on the pull request, resolving them as appropriate.
+6.  **Submit Changes:** Submit the changes to the same branch as the pull request to update it with the new commit.

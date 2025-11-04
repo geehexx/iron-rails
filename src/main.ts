@@ -15,6 +15,5 @@ const config: Phaser.Types.Core.GameConfig = {
 }
 
 window.addEventListener('load', ()=>{
-  // eslint-disable-next-line no-new
   new Phaser.Game(config)
 })
