@@ -14,6 +14,7 @@ export class GameScene extends Phaser.Scene {
   private hpText!: Phaser.GameObjects.Text;
   private enemyCountText!: Phaser.GameObjects.Text;
   private distanceText!: Phaser.GameObjects.Text;
+  private enemiesKilled: number = 0;
   private distance: number = 0;
   private targetDistance: number = 5000; // 5km to win
   private gameOver: boolean = false;
@@ -58,7 +59,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  update(time: number, delta: number) {
+  update(time: number, delta: number): void {
     if (this.gameOver) return;
 
     this.spawner.update(this.world, time, this);
@@ -118,7 +119,7 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5);
     
     // Stats
-    const stats = `Distance: ${(this.distance / 1000).toFixed(1)} km\nEnemies Killed: ${this.world.getEntitiesByType('enemy').length}`;
+    const stats = `Distance: ${(this.distance / 1000).toFixed(1)} km\nEnemies Killed: ${this.enemiesKilled}`;
     this.add.text(centerX, centerY + 50, stats, {
       fontSize: '24px',
       color: '#ffffff',

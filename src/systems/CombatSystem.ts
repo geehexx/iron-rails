@@ -11,8 +11,10 @@ export class CombatSystem {
     const train = world.getEntitiesByType('train')[0];
     if (!train?.transform || !train.health) return;
 
-    const dist = Math.hypot(train.transform.x - x, train.transform.y - y);
-    if (dist <= this.EXPLOSION_RADIUS) {
+    const dx = train.transform.x - x;
+    const dy = train.transform.y - y;
+    const distSq = dx * dx + dy * dy;
+    if (distSq <= this.EXPLOSION_RADIUS * this.EXPLOSION_RADIUS) {
       train.health.current -= this.EXPLOSION_DAMAGE;
     }
   }
@@ -23,15 +25,18 @@ export class CombatSystem {
   ): EntityId | null {
     const candidates = spatialGrid.queryRadius(x, y, range);
     let nearest: EntityId | null = null;
-    let minDist = Infinity;
+    let minDistSq = range * range; // Use squared distance to avoid Math.sqrt
 
     for (const id of candidates) {
       const entity = world.entities.get(id);
       if (!entity || entity.type !== 'enemy' || !entity.transform) continue;
       
-      const dist = Math.hypot(entity.transform.x - x, entity.transform.y - y);
-      if (dist < minDist) {
-        minDist = dist;
+      const dx = entity.transform.x - x;
+      const dy = entity.transform.y - y;
+      const distSq = dx * dx + dy * dy;
+      
+      if (distSq < minDistSq) {
+        minDistSq = distSq;
         nearest = id;
       }
     }

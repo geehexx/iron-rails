@@ -152,7 +152,7 @@ src/
 - Operate on entities with specific component combinations
 - Called from `GameScene.update()` in sequence
 
-See [ADR-0002](./docs/adr/0002-use-ecs-architecture.md) for rationale.
+See [ADR-0004](./docs/adr/0004-use-ecs-architecture.md) for rationale.
 
 ---
 
