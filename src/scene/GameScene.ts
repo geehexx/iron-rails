@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { defineComponent, Types, addEntity, addComponent, createWorld, IWorld, removeEntity, getEntities } from 'bitecs'
+import { defineComponent, Types, addEntity, addComponent, createWorld, IWorld, removeEntity, getAllEntities } from 'bitecs'
 
 const Position = defineComponent({ x: Types.f32, y: Types.f32 })
 
@@ -25,13 +25,13 @@ export default class GameScene extends Phaser.Scene {
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       // Remove all entities to avoid leaks
-      for (const id of getEntities(this.world)) {
+      for (const id of getAllEntities(this.world)) {
         removeEntity(this.world, id)
       }
     })
   }
 
-  update(time: number, dt: number) {
+  update(_time: number, _dt: number) {
     // Game loop will update ECS systems here
   }
 }

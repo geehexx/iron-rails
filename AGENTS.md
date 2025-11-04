@@ -15,6 +15,19 @@ Welcome, agent. This document provides the high-level guidelines for working on 
 
 This project uses `markdownlint-cli2` to enforce a consistent style across all Markdown files. The linter is configured to run automatically as a pre-commit hook, so you don't have to worry about running it manually.
 
+## Pull Request Guidelines
+
+When working on pull requests:
+
+1. **Address All Review Comments**: Systematically work through all review comments from automated tools (CodeRabbit, qodo-merge-pro) and human reviewers.
+2. **Respond to Reviewers**: Add comments on the PR to acknowledge which suggestions were implemented, which were declined (with rationale), and any alternative approaches taken.
+3. **Validate Suggestions**: Don't blindly apply suggestions. Consider:
+   - Does this align with our architecture decisions in `/docs/adr/`?
+   - Does this improve code quality without over-engineering?
+   - Are there performance implications?
+4. **Test Changes**: Run `npm run lint`, `npm run build`, and `npm run test` locally before pushing.
+5. **Update Documentation**: If implementation differs from review suggestions, update relevant ADRs or technical docs to reflect the final decision.
+
 ## Core Documentation Structure
 
 - **/docs/gdd/**: The Game Design Document. This is **what** we are building.
