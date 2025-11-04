@@ -25,6 +25,7 @@ export class GameScene extends Phaser.Scene {
   private gameOver: boolean = false;
   private isPaused: boolean = false;
   private gameSpeed: number = 1;
+  private previousTimeScale: number = 1;
 
   constructor() { super('GameScene'); }
 
@@ -33,6 +34,7 @@ export class GameScene extends Phaser.Scene {
     this.targetDistance = this.gameState.getTargetDistance();
     this.isPaused = false;
     this.gameSpeed = 1;
+    this.previousTimeScale = 1;
     this.distance = 0;
     this.enemiesKilled = 0;
     this.gameOver = false;
@@ -95,9 +97,11 @@ export class GameScene extends Phaser.Scene {
     this.isPaused = !this.isPaused;
     // Pause/resume timers and tweens to fully freeze the simulation
     if (this.isPaused) {
+      this.previousTimeScale = this.time.timeScale || this.gameSpeed;
       this.time.timeScale = 0;
       this.tweens.timeScale = 0;
     } else {
+      this.gameSpeed = this.previousTimeScale || 1;
       this.time.timeScale = this.gameSpeed;
       this.tweens.timeScale = this.gameSpeed;
     }
@@ -112,6 +116,7 @@ export class GameScene extends Phaser.Scene {
     const newSpeed = speeds[index];
     if (newSpeed !== undefined) {
       this.gameSpeed = newSpeed;
+      this.previousTimeScale = this.gameSpeed;
       if (!this.isPaused) {
         this.time.timeScale = this.gameSpeed;
         this.tweens.timeScale = this.gameSpeed;
