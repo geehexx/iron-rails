@@ -19,5 +19,9 @@ Iron Rails is a 2D side-scrolling auto-battler web game where you manage a steam
 3. **Run the game:**
 
    ```bash
-   npm start
+   npm run dev    # Start dev server at localhost:5173
+   npm test       # Run unit tests
+   npm run build  # Production build
    ```
+
+See [docs/run-dev.md](./docs/run-dev.md) for detailed development instructions.
