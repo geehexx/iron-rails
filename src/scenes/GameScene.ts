@@ -26,7 +26,9 @@ export class GameScene extends Phaser.Scene {
     this.spatialGrid = new SpatialGrid(100);
     this.spawner = new SpawnerSystem();
     this.movement = new MovementSystem();
-    this.combat = new CombatSystem();
+    this.combat = new CombatSystem((enemyId) => {
+      this.enemiesKilled++;
+    });
 
     // Create train (larger, more visible)
     const train = this.world.createEntity('train');

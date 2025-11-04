@@ -6,6 +6,8 @@ export class CombatSystem {
   private readonly EXPLOSION_RADIUS = 80; // AOE radius for zombie explosion
   private readonly EXPLOSION_DAMAGE = 1; // Flat damage to train if in range
 
+  constructor(private onEnemyKilled?: (enemyId: EntityId) => void) {}
+
   private explodeEnemy(x: number, y: number, world: World): void {
     // Check if train is within explosion radius
     const train = world.getEntitiesByType('train')[0];
@@ -62,6 +64,7 @@ export class CombatSystem {
         if (enemy.health.current <= 0) {
           // Enemy dies - trigger explosion AOE damage
           this.explodeEnemy(enemy.transform.x, enemy.transform.y, world);
+          this.onEnemyKilled?.(targetId);
           world.destroyEntity(targetId);
           spatialGrid.remove(targetId);
         }
