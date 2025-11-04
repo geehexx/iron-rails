@@ -6,6 +6,8 @@ import { MovementSystem } from '../systems/MovementSystem';
 import { CombatSystem } from '../systems/CombatSystem';
 import { ScrapSystem } from '../systems/ScrapSystem';
 import { GameState } from '../state/GameState';
+import { PlayerSystem } from '../systems/PlayerSystem';
+import { UISystem } from '../systems/UISystem';
 
 export class GameScene extends Phaser.Scene {
   private world!: World;
@@ -14,23 +16,15 @@ export class GameScene extends Phaser.Scene {
   private movement!: MovementSystem;
   private combat!: CombatSystem;
   private scrapSystem!: ScrapSystem;
+  private playerSystem!: PlayerSystem;
+  private uiSystem!: UISystem;
   private gameState!: GameState;
-  private hpText!: Phaser.GameObjects.Text;
-  private scrapText!: Phaser.GameObjects.Text;
-  private speedText!: Phaser.GameObjects.Text;
-  private enemyCountText!: Phaser.GameObjects.Text;
-  private distanceText!: Phaser.GameObjects.Text;
-  private notificationText!: Phaser.GameObjects.Text;
   private enemiesKilled: number = 0;
   private distance: number = 0;
   private targetDistance: number = 5000;
   private gameOver: boolean = false;
   private isPaused: boolean = false;
   private gameSpeed: number = 1;
-  private trainSpeed: number = 0;
-  private trainMaxSpeed: number = 50;
-  private trainAcceleration: number = 20;
-  private regenAccumulator: number = 0;
 
   constructor() { super('GameScene'); }
 
@@ -39,7 +33,9 @@ export class GameScene extends Phaser.Scene {
     this.targetDistance = this.gameState.getTargetDistance();
     this.isPaused = false;
     this.gameSpeed = 1;
-    this.trainSpeed = 0;
+    this.distance = 0;
+    this.enemiesKilled = 0;
+    this.gameOver = false;
   }
 
   create() {
@@ -48,6 +44,8 @@ export class GameScene extends Phaser.Scene {
     this.spawner = new SpawnerSystem();
     this.movement = new MovementSystem();
     this.scrapSystem = new ScrapSystem();
+    this.playerSystem = new PlayerSystem();
+    this.uiSystem = new UISystem(this);
     this.combat = new CombatSystem((enemyId, x, y) => {
       this.enemiesKilled++;
       this.scrapSystem.spawnScrap(x, y, this.world, this, this.spatialGrid);
@@ -57,8 +55,6 @@ export class GameScene extends Phaser.Scene {
     const upgrades = this.gameState.getUpgrades();
     const baseMaxHp = 10;
     const maxHp = baseMaxHp + upgrades.maxHp;
-    this.trainMaxSpeed = 50 * (1 + upgrades.maxSpeed);
-    this.trainAcceleration = 20 * (1 + upgrades.acceleration);
     
     // Apply armor to combat system
     this.combat.setArmor(upgrades.armor);
@@ -67,52 +63,9 @@ export class GameScene extends Phaser.Scene {
     train.transform = { x: 200, y: 360, rotation: 0 };
     train.health = { current: maxHp, max: maxHp };
     train.combat = { damage: 1, range: 400, fireRate: 800, lastFired: 0 };
+    train.velocity = { vx: 0, vy: 0 };
     train.sprite = this.add.rectangle(200, 360, 100, 60, 0x3366ff);
     this.spatialGrid.insert(train.id, 200, 360);
-
-    // HUD - styled better
-    this.hpText = this.add.text(16, 16, 'HP: 10', { 
-      fontSize: '28px', 
-      color: '#00ff00',
-      fontStyle: 'bold',
-      stroke: '#000', 
-      strokeThickness: 4 
-    });
-    this.scrapText = this.add.text(16, 52, 'Scrap: 0', {
-      fontSize: '24px',
-      color: '#ffaa00',
-      fontStyle: 'bold',
-      stroke: '#000',
-      strokeThickness: 4
-    });
-    this.distanceText = this.add.text(16, 88, 'Distance: 0.0 / 5.0 km', { 
-      fontSize: '24px', 
-      color: '#ffff00',
-      fontStyle: 'bold',
-      stroke: '#000', 
-      strokeThickness: 4 
-    });
-    this.speedText = this.add.text(16, 124, 'Speed: 0 km/h', {
-      fontSize: '20px',
-      color: '#00ffff',
-      stroke: '#000',
-      strokeThickness: 3
-    });
-    this.enemyCountText = this.add.text(16, 156, 'Enemies: 0', { 
-      fontSize: '20px', 
-      color: '#fff',
-      stroke: '#000', 
-      strokeThickness: 3 
-    });
-    
-    // Notification area (center top)
-    this.notificationText = this.add.text(640, 50, '', {
-      fontSize: '24px',
-      color: '#00ff00',
-      fontStyle: 'bold',
-      stroke: '#000',
-      strokeThickness: 4
-    }).setOrigin(0.5).setAlpha(0);
 
     // Keyboard controls
     this.setupKeyboardControls();
@@ -140,7 +93,15 @@ export class GameScene extends Phaser.Scene {
 
   private togglePause() {
     this.isPaused = !this.isPaused;
-    this.showNotification(this.isPaused ? 'PAUSED' : 'RESUMED', 1000);
+    // Pause/resume timers and tweens to fully freeze the simulation
+    if (this.isPaused) {
+      this.time.timeScale = 0;
+      this.tweens.timeScale = 0;
+    } else {
+      this.time.timeScale = this.gameSpeed;
+      this.tweens.timeScale = this.gameSpeed;
+    }
+    this.uiSystem.showNotification(this.isPaused ? 'PAUSED' : 'RESUMED', 1000);
   }
 
   private cycleGameSpeed(direction: number) {
@@ -151,19 +112,12 @@ export class GameScene extends Phaser.Scene {
     const newSpeed = speeds[index];
     if (newSpeed !== undefined) {
       this.gameSpeed = newSpeed;
-      this.showNotification(`Speed: ${this.gameSpeed}x`, 800);
+      if (!this.isPaused) {
+        this.time.timeScale = this.gameSpeed;
+        this.tweens.timeScale = this.gameSpeed;
+      }
+      this.uiSystem.showNotification(`Speed: ${this.gameSpeed}x`, 800);
     }
-  }
-
-  private showNotification(text: string, duration: number) {
-    this.notificationText.setText(text);
-    this.notificationText.setAlpha(1);
-    this.tweens.add({
-      targets: this.notificationText,
-      alpha: 0,
-      duration: duration,
-      delay: duration * 0.3
-    });
   }
 
   update(time: number, delta: number): void {
@@ -177,51 +131,19 @@ export class GameScene extends Phaser.Scene {
     this.spawner.update(this.world, time, this, this.spatialGrid);
     this.movement.update(this.world, effectiveDelta, this.spatialGrid);
     this.combat.update(this.world, time, effectiveDelta, this.spatialGrid);
+    this.playerSystem.update(this.world, this.gameState, effectiveDelta);
     this.scrapSystem.update(this.world, this.spatialGrid, (amount) => {
       this.gameState.addScrap(amount);
     });
 
     const train = this.world.getEntitiesByType('train')[0];
-    if (!train?.transform || !train.health) return;
-
-    // Train acceleration physics
-    if (this.trainSpeed < this.trainMaxSpeed) {
-      this.trainSpeed += this.trainAcceleration * deltaSeconds;
-      this.trainSpeed = Math.min(this.trainSpeed, this.trainMaxSpeed);
-    }
+    if (!train?.transform || !train.health || !train.velocity) return;
 
     // Update distance based on speed
-    this.distance += this.trainSpeed * deltaSeconds;
+    this.distance += train.velocity.vx * deltaSeconds;
 
-    // Apply regeneration
-    const upgrades = this.gameState.getUpgrades();
-    if (upgrades.regen > 0) {
-      this.regenAccumulator += deltaSeconds;
-      if (this.regenAccumulator >= 1.0) {
-        const regenAmount = Math.floor(this.regenAccumulator * upgrades.regen);
-        if (regenAmount > 0 && train.health.current < train.health.max) {
-          train.health.current = Math.min(
-            train.health.current + regenAmount,
-            train.health.max
-          );
-          this.regenAccumulator = 0;
-        }
-      }
-    }
-
-    // Apply armor to damage (handled in CombatSystem, but we track it here)
-    // Armor reduces damage taken - this is applied when damage is dealt
-
-    // Update HUD
-    const hpPercent = train.health.current / train.health.max;
-    this.hpText.setText(`HP: ${train.health.current} / ${train.health.max}`);
-    this.hpText.setColor(hpPercent > 0.5 ? '#00ff00' : hpPercent > 0.25 ? '#ffff00' : '#ff0000');
-    this.scrapText.setText(`Scrap: ${this.gameState.getScrap()}`);
-    this.distanceText.setText(
-      `Distance: ${(this.distance / 1000).toFixed(1)} / ${(this.targetDistance / 1000).toFixed(1)} km`
-    );
-    this.speedText.setText(`Speed: ${Math.floor(this.trainSpeed)} km/h`);
-    this.enemyCountText.setText(`Enemies: ${this.world.getEntitiesByType('enemy').length}`);
+    // Update UI
+    this.uiSystem.update(this.world, this.gameState, this.distance, this.targetDistance, train.velocity.vx);
 
     // Check loss condition
     if (train.health.current <= 0) {

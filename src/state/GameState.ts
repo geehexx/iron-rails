@@ -43,6 +43,14 @@ export class GameState {
     this.data = this.load();
   }
 
+  private checksum(data: string): number {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++) {
+      sum += data.charCodeAt(i);
+    }
+    return sum;
+  }
+
   /**
    * Load state from localStorage
    */
@@ -65,6 +73,16 @@ export class GameState {
         };
       }
 
+      const dataString = JSON.stringify(parsed.data);
+      if (this.checksum(dataString) !== parsed.checksum) {
+        console.warn('Checksum mismatch, save data may be tampered with. Using defaults.');
+        return {
+            ...DEFAULT_STATE,
+            upgrades: { ...DEFAULT_STATE.upgrades }
+        };
+      }
+
+
       return parsed.data;
     } catch (error) {
       console.error('Failed to load game state:', error);
@@ -80,14 +98,17 @@ export class GameState {
    */
   save(): void {
     try {
-      const saveData = {
-        version: SAVE_VERSION,
-        timestamp: Date.now(),
-        data: this.data
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+        const dataString = JSON.stringify(this.data);
+        const saveData = {
+            version: SAVE_VERSION,
+            timestamp: Date.now(),
+            data: this.data,
+            checksum: this.checksum(dataString)
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+        console.log('Game state saved', saveData);
     } catch (error) {
-      console.error('Failed to save game state:', error);
+        console.error('Failed to save game state:', error);
     }
   }
 
@@ -100,6 +121,7 @@ export class GameState {
       upgrades: { ...DEFAULT_STATE.upgrades }
     };
     this.save();
+    console.log('Game state reset');
   }
 
   // Getters
@@ -126,6 +148,7 @@ export class GameState {
   // Setters
   addScrap(amount: number): void {
     this.data.scrap += amount;
+    this.save();
   }
 
   spendScrap(amount: number): boolean {
@@ -141,12 +164,14 @@ export class GameState {
     this.data.scrap -= cost;
     this.data.upgrades[type] += amount;
     this.save();
+    console.log(`Upgrade purchased: ${type}, amount: ${amount}, cost: ${cost}`);
     return true;
   }
 
   incrementLevel(): void {
     this.data.currentLevel++;
     this.save();
+    console.log(`Level incremented to: ${this.data.currentLevel}`);
   }
 
   addEnemiesKilled(count: number): void {
