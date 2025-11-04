@@ -114,16 +114,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-# Temporary documentation files (use proper docs/ structure instead)
-*_SUMMARY.md
-NOTES.md
-TODO.md
-
-# Screenshots (should be in docs/screenshots if needed)
-*.png
-*.jpg
-*.jpeg
-!docs/**/*.png
-!docs/**/*.jpg
-!docs/**/*.jpeg

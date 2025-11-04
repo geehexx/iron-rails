@@ -8,7 +8,6 @@ export interface Entity {
   health?: import('../components/Health').Health;
   combat?: import('../components/Combat').Combat;
   velocity?: import('../components/Velocity').Velocity;
-  scrap?: import('../components/Scrap').Scrap;
-  sprite?: Phaser.GameObjects.GameObject;
-  type: 'train' | 'enemy' | 'projectile' | 'scrap';
+  sprite?: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
+  type: 'train' | 'enemy' | 'projectile';
 }

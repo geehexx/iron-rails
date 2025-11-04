@@ -5,24 +5,8 @@ import { EntityId } from '../ecs/Entity';
 export class CombatSystem {
   private readonly EXPLOSION_RADIUS = 80; // AOE radius for zombie explosion
   private readonly EXPLOSION_DAMAGE = 1; // Flat damage to train if in range
-  private armorMultiplier: number = 1.0;
 
-  constructor(
-    private onEnemyKilled?: (enemyId: EntityId, x: number, y: number) => void
-  ) {}
-
-  /**
-   * Set armor damage reduction.
-   * @param armorValue - Armor value between 0.0 (no reduction) and 1.0 (100% reduction, immune).
-   *                     Values > 1.0 are capped at full immunity.
-   */
-  setArmor(armorValue: number): void {
-    if (armorValue < 0) {
-      console.warn(`CombatSystem.setArmor: negative armorValue ${armorValue} clamped to 0`);
-      armorValue = 0;
-    }
-    this.armorMultiplier = Math.max(0, 1.0 - Math.min(armorValue, 1.0));
-  }
+  constructor(private onEnemyKilled?: (enemyId: EntityId) => void) {}
 
   private explodeEnemy(x: number, y: number, world: World): void {
     // Check if train is within explosion radius
@@ -33,11 +17,7 @@ export class CombatSystem {
     const dy = train.transform.y - y;
     const distSq = dx * dx + dy * dy;
     if (distSq <= this.EXPLOSION_RADIUS * this.EXPLOSION_RADIUS) {
-      const scaledDamage = this.EXPLOSION_DAMAGE * this.armorMultiplier;
-      if (scaledDamage <= 0) {
-        return;
-      }
-      train.health.current = Math.max(0, train.health.current - scaledDamage);
+      train.health.current -= this.EXPLOSION_DAMAGE;
     }
   }
 
@@ -83,9 +63,8 @@ export class CombatSystem {
         enemy.health.current -= train.combat.damage;
         if (enemy.health.current <= 0) {
           // Enemy dies - trigger explosion AOE damage
-          const { x, y } = enemy.transform;
-          this.explodeEnemy(x, y, world);
-          this.onEnemyKilled?.(targetId, x, y);
+          this.explodeEnemy(enemy.transform.x, enemy.transform.y, world);
+          this.onEnemyKilled?.(targetId);
           world.destroyEntity(targetId);
           spatialGrid.remove(targetId);
         }

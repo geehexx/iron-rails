@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { GameScene } from './scenes/GameScene';
-import { UpgradeScene } from './scenes/UpgradeScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -10,7 +9,7 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'game',
   backgroundColor: '#1a1a2e',
   physics: { default: 'arcade', arcade: { gravity: { x: 0, y: 0 }, debug: false } },
-  scene: [BootScene, GameScene, UpgradeScene]
+  scene: [BootScene, GameScene]
 };
 
 export const game = new Phaser.Game(config);
