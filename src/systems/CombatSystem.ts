@@ -33,8 +33,11 @@ export class CombatSystem {
     const dy = train.transform.y - y;
     const distSq = dx * dx + dy * dy;
     if (distSq <= this.EXPLOSION_RADIUS * this.EXPLOSION_RADIUS) {
-      const damage = Math.ceil(this.EXPLOSION_DAMAGE * this.armorMultiplier);
-      train.health.current -= damage;
+      const scaledDamage = this.EXPLOSION_DAMAGE * this.armorMultiplier;
+      if (scaledDamage <= 0) {
+        return;
+      }
+      train.health.current = Math.max(0, train.health.current - scaledDamage);
     }
   }
 
