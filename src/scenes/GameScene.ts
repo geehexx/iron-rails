@@ -64,7 +64,7 @@ export class GameScene extends Phaser.Scene {
   update(time: number, delta: number): void {
     if (this.gameOver) return;
 
-    this.spawner.update(this.world, time, this);
+    this.spawner.update(this.world, time, this, this.spatialGrid);
     this.movement.update(this.world, delta, this.spatialGrid);
     this.combat.update(this.world, time, delta, this.spatialGrid);
 
