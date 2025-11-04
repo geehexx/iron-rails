@@ -9,9 +9,10 @@ export class PlayerSystem {
     const train = world.getEntitiesByType('train')[0];
     if (!train || !train.transform || !train.health) return;
 
+    const upgrades = gameState.getUpgrades();
+
     // Train acceleration physics
-    if (train.velocity && train.combat) {
-        const upgrades = gameState.getUpgrades();
+    if (train.velocity) {
         const trainMaxSpeed = 50 * (1 + upgrades.maxSpeed);
         const trainAcceleration = 20 * (1 + upgrades.acceleration);
 
@@ -22,7 +23,6 @@ export class PlayerSystem {
     }
 
     // Apply regeneration
-    const upgrades = gameState.getUpgrades();
     if (upgrades.regen > 0) {
       this.regenAccumulator += upgrades.regen * deltaSeconds;
       if (this.regenAccumulator >= 1.0) {
