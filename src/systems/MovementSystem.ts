@@ -13,10 +13,7 @@ export class MovementSystem {
       entity.transform.y += entity.velocity.vy * deltaSeconds;
       
       if (entity.sprite && 'setPosition' in entity.sprite && typeof (entity.sprite as any).setPosition === 'function') {
-        (entity.sprite as { setPosition(x: number, y: number): void }).setPosition(
-          entity.transform.x,
-          entity.transform.y
-        );
+        entity.sprite.setPosition(entity.transform.x, entity.transform.y);
       }
       
       spatialGrid.update(entity.id, entity.transform.x, entity.transform.y);
