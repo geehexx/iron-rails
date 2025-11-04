@@ -144,8 +144,9 @@ export class UpgradeScene extends Phaser.Scene {
   private updateLevelDisplay() {
     const level = this.gameState.getCurrentLevel();
     const nextDistance = this.gameState.getTargetDistance() / 1000;
+    const runText = level === 1 ? 'Starting Run 1' : `Completed Run ${level - 1}`;
     this.levelText.setText(
-      `Completed Run ${level - 1} | Next Target: ${nextDistance.toFixed(1)} km`
+      `${runText} | Next Target: ${nextDistance.toFixed(1)} km`
     );
   }
 
