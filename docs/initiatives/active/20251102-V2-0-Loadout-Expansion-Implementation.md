@@ -2,7 +2,7 @@
 
 **Status:** In Progress
 **Created:** 2025-11-02
-**Updated:** 2025-01-15
+**Updated:** 2025-11-07
 **Owner:** Development Team
 **Priority:** High
 **Estimated Effort:** 3-4 weeks
@@ -258,13 +258,6 @@ bench('spatial grid query with 100 entities', () => {
 #### 1.1 New Components ✅
 
 - [x] Create `TrainCar.ts` component interface
-  ```typescript
-  export interface TrainCar {
-    carType: 'engine' | 'gun' | 'cargo';
-    position: number; // Index in train (0 = engine)
-    hardpoints?: EntityId[]; // For gun cars
-  }
-  ```
 - [x] Create `Weapon.ts` component interface
 - [x] Create `Hardpoint.ts` component interface
 - [x] Create `Explosion.ts` component for Bloater AOE
