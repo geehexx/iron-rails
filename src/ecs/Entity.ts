@@ -10,5 +10,9 @@ export interface Entity {
   velocity?: import('../components/Velocity').Velocity;
   scrap?: import('../components/Scrap').Scrap;
   sprite?: Phaser.GameObjects.GameObject;
-  type: 'train' | 'enemy' | 'projectile' | 'scrap';
+  trainCar?: import('../components/TrainCar').TrainCar;
+  weapon?: import('../components/Weapon').Weapon;
+  hardpoint?: import('../components/Hardpoint').Hardpoint;
+  explosion?: import('../components/Explosion').Explosion;
+  type: 'train' | 'train-car' | 'weapon' | 'enemy' | 'projectile' | 'scrap';
 }

@@ -10,10 +10,18 @@ export class World {
     return entity;
   }
 
-  destroyEntity(id: EntityId): void {
+  getEntity(id: EntityId): Entity | undefined {
+    return this.entities.get(id);
+  }
+
+  removeEntity(id: EntityId): void {
     const entity = this.entities.get(id);
     if (entity?.sprite) entity.sprite.destroy();
     this.entities.delete(id);
+  }
+
+  destroyEntity(id: EntityId): void {
+    this.removeEntity(id);
   }
 
   getEntitiesByType(type: Entity['type']): Entity[] {
