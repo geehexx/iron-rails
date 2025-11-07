@@ -31,7 +31,7 @@ describe('WeaponSystem', () => {
       enemy.transform = { x: 500, y: 360 };
       enemy.health = { current: 3, max: 3 };
 
-      spatialGrid.insert(enemy.id.toString(), 500, 360);
+      spatialGrid.insert(enemy.id, 500, 360);
 
       system.update(world, 1000, spatialGrid);
 
@@ -54,7 +54,7 @@ describe('WeaponSystem', () => {
       enemy.transform = { x: 500, y: 360 };
       enemy.health = { current: 3, max: 3 };
 
-      spatialGrid.insert(enemy.id.toString(), 500, 360);
+      spatialGrid.insert(enemy.id, 500, 360);
 
       system.update(world, 1000, spatialGrid);
 
@@ -81,8 +81,8 @@ describe('WeaponSystem', () => {
       enemy2.transform = { x: 400, y: 360 };
       enemy2.health = { current: 3, max: 3 };
 
-      spatialGrid.insert(enemy1.id.toString(), 500, 360);
-      spatialGrid.insert(enemy2.id.toString(), 400, 360);
+      spatialGrid.insert(enemy1.id, 500, 360);
+      spatialGrid.insert(enemy2.id, 400, 360);
 
       system.update(world, 1000, spatialGrid);
 
@@ -106,7 +106,7 @@ describe('WeaponSystem', () => {
       enemy.transform = { x: 500, y: 360 };
       enemy.health = { current: 3, max: 3 };
 
-      spatialGrid.insert(enemy.id.toString(), 500, 360);
+      spatialGrid.insert(enemy.id, 500, 360);
 
       system.update(world, 1000, spatialGrid);
 
@@ -131,7 +131,7 @@ describe('WeaponSystem', () => {
       enemy.transform = { x: 450, y: 360 };
       enemy.health = { current: 3, max: 3 };
 
-      spatialGrid.insert(enemy.id.toString(), 450, 360);
+      spatialGrid.insert(enemy.id, 450, 360);
 
       system.update(world, 1000, spatialGrid);
 
@@ -154,7 +154,7 @@ describe('WeaponSystem', () => {
       enemy.transform = { x: 400, y: 360 };
       enemy.health = { current: 10, max: 10 };
 
-      spatialGrid.insert(enemy.id.toString(), 400, 360);
+      spatialGrid.insert(enemy.id, 400, 360);
 
       system.update(world, 2000, spatialGrid);
 

@@ -16,11 +16,11 @@ export class WeaponSystem {
         weapon.weapon.range
       );
 
-      let nearest: string | null = null;
+      let nearest: number | null = null;
       let minDistSq = Infinity;
 
       for (const candidateId of candidates) {
-        const entity = world.getEntity(Number(candidateId));
+        const entity = world.getEntity(candidateId);
         if (!entity || entity.type !== 'enemy' || !entity.transform) continue;
 
         const dx = entity.transform.x - weapon.transform.x;
@@ -34,13 +34,13 @@ export class WeaponSystem {
       }
 
       if (nearest) {
-        const target = world.getEntity(Number(nearest));
+        const target = world.getEntity(nearest);
         if (target?.health) {
           target.health.current = Math.max(0, target.health.current - weapon.weapon.damage);
           weapon.weapon.lastFired = time;
 
           if (target.health.current <= 0) {
-            world.removeEntity(Number(nearest));
+            world.removeEntity(nearest);
           }
         }
       }
