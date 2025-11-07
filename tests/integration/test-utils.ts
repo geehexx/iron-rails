@@ -7,16 +7,11 @@ import { Velocity } from '../../src/components/Velocity';
 
 export function createTestEntity(
   world: World,
-  type: string,
+  type: Entity['type'],
   components: Partial<Entity> = {}
 ): EntityId {
-  const entity: Entity = {
-    id: world.createEntity(),
-    type,
-    ...components,
-  };
-  
-  world.addEntity(entity);
+  const entity = world.createEntity(type);
+  Object.assign(entity, components);
   return entity.id;
 }
 

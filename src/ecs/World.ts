@@ -14,10 +14,12 @@ export class World {
     return this.entities.get(id);
   }
 
-  removeEntity(id: EntityId): void {
+  removeEntity(id: EntityId): boolean {
     const entity = this.entities.get(id);
-    if (entity?.sprite) entity.sprite.destroy();
+    if (!entity) return false;
+    if (entity.sprite) entity.sprite.destroy();
     this.entities.delete(id);
+    return true;
   }
 
   destroyEntity(id: EntityId): void {
@@ -29,6 +31,9 @@ export class World {
   }
 
   clear(): void {
-    this.entities.forEach((e, id) => this.destroyEntity(id));
+    const ids = Array.from(this.entities.keys());
+    for (const id of ids) {
+      this.destroyEntity(id);
+    }
   }
 }

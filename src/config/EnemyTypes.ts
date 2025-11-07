@@ -66,7 +66,8 @@ export const SPAWN_TABLES: Record<number, EnemySpawnWeight[]> = {
 };
 
 export function getSpawnTable(level: number): EnemySpawnWeight[] {
-  return SPAWN_TABLES[Math.min(level, 5)] || SPAWN_TABLES[5];
+  const table = SPAWN_TABLES[Math.min(level, 5)] || SPAWN_TABLES[5];
+  return [...table];
 }
 
 export function selectEnemyType(level: number): EnemyType {

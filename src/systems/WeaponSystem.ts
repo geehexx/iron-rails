@@ -36,7 +36,7 @@ export class WeaponSystem {
       if (nearest) {
         const target = world.getEntity(Number(nearest));
         if (target?.health) {
-          target.health.current -= weapon.weapon.damage;
+          target.health.current = Math.max(0, target.health.current - weapon.weapon.damage);
           weapon.weapon.lastFired = time;
 
           if (target.health.current <= 0) {

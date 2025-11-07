@@ -29,17 +29,21 @@ export class TrainSystem {
   }
 
   routeDamage(world: World, damage: number): void {
-    if (this.trainCarIds.length === 0) return;
+    if (damage <= 0 || this.trainCarIds.length === 0) return;
 
-    const rearCarId = this.trainCarIds[this.trainCarIds.length - 1];
-    const rearCar = world.getEntity(rearCarId);
-    
-    if (!rearCar?.health) return;
+    for (let i = this.trainCarIds.length - 1; i >= 0 && damage > 0; i--) {
+      const carId = this.trainCarIds[i];
+      const car = world.getEntity(carId);
+      if (!car?.health) continue;
 
-    rearCar.health.current -= damage;
-
-    if (rearCar.health.current <= 0) {
-      this.destroyCar(world, rearCarId);
+      const remaining = car.health.current - damage;
+      if (remaining > 0) {
+        car.health.current = remaining;
+        damage = 0;
+      } else {
+        damage = -remaining;
+        this.destroyCar(world, carId);
+      }
     }
   }
 
@@ -51,8 +55,12 @@ export class TrainSystem {
     world.removeEntity(carId);
   }
 
-  isEngineDestroyed(): boolean {
-    return this.trainCarIds.length === 0;
+  isEngineDestroyed(world: World): boolean {
+    if (this.trainCarIds.length === 0) return true;
+    const engineId = this.trainCarIds[0];
+    const engine = world.getEntity(engineId);
+    if (!engine) return true;
+    return engine.health ? engine.health.current <= 0 : false;
   }
 
   getTotalHealth(world: World): { current: number; max: number } {
