@@ -139,14 +139,39 @@ Address critical inconsistencies and technical debt that block continued develop
 
 ### MovementSystem.ts Fix Applied
 
-**Solution: Type Assertion (Minimal Change)**
+**Solution: Type Guard**
 ```typescript
-if (entity.sprite && 'setPosition' in entity.sprite && typeof (entity.sprite as any).setPosition === 'function') {
-  (entity.sprite as any).setPosition(entity.transform.x, entity.transform.y);
+import Phaser from 'phaser';
+import { World } from '../ecs/World';
+import { SpatialGrid } from './SpatialGrid';
+
+type Positionable = {
+  setPosition: (x: number, y: number) => void;
+};
+
+function isPositionable(obj: any): obj is Positionable {
+  return obj && typeof obj.setPosition === 'function';
 }
+
+export class MovementSystem {
+  update(...): void {
+    ...
+    
+    world.entities.forEach(entity => {
+      ...
+      
+      if (isPositionable(entity.sprite)) {
+        entity.sprite.setPosition(entity.transform.x, entity.transform.y);
+      }
+      
+      ...
+    });
+  }
+}
+
 ```
 
-**Rationale**: Minimal change that preserves runtime safety checks while satisfying TypeScript compiler. The runtime checks ensure the method exists before calling.
+**Rationale**: A high quality fix that prevents unnecessary confusing code and type casting and follows a good modern practice.
 
 ### Version Number Update
 

@@ -3,6 +3,14 @@ import { SpatialGrid } from './SpatialGrid';
 import { Entity } from '../ecs/Entity';
 import Phaser from 'phaser';
 
+type Destroyable = {
+  destroy: () => void;
+};
+
+function isDestroyable(obj: any): obj is Destroyable {
+  return obj && typeof obj.destroy === 'function';
+}
+
 /**
  * ScrapSystem - Handles scrap spawning, collection, and lifecycle
  */
@@ -10,6 +18,18 @@ export class ScrapSystem {
   private readonly COLLECTION_RADIUS = 150; // Auto-collect radius around train
   private readonly SCRAP_LIFETIME = 10000;  // Scrap disappears after 10 seconds
   private readonly SCRAP_VALUE = 1;         // Base scrap value per drop
+
+  private destroyScrap(world: World, spatialGrid: SpatialGrid, entity: Entity) : void {
+    // Remove from spatial index and destroy visual
+    spatialGrid.remove(entity.id);
+
+    // Destroy visual if it exists
+    if (isDestroyable(entity.sprite)) {
+      entity.sprite.destroy();
+    }
+
+    world.destroyEntity(entity.id);
+  }
 
   /**
    * Spawn scrap at enemy death location
@@ -34,14 +54,9 @@ export class ScrapSystem {
 
     // Auto-destroy after lifetime
     scene.time.delayedCall(this.SCRAP_LIFETIME, () => {
-      const e = world.entities.get(scrap.id);
-      if (e) {
-        spatialGrid.remove(scrap.id);
-        // Destroy visual if it exists
-        if (e.sprite && 'destroy' in e.sprite && typeof (e.sprite as any).destroy === 'function') {
-          (e.sprite as any).destroy();
-        }
-        world.destroyEntity(scrap.id);
+      const entity = world.entities.get(scrap.id);
+      if (entity) {
+        this.destroyScrap(world, spatialGrid, entity);
       }
     });
   }
@@ -68,15 +83,8 @@ export class ScrapSystem {
       const entity = world.entities.get(entityId);
       if (!entity || entity.type !== 'scrap' || !entity.scrap) continue;
 
-      // Collect scrap
       onScrapCollected(entity.scrap.value);
-
-      // Remove from spatial index and destroy visual
-      spatialGrid.remove(entityId);
-      if (entity.sprite && 'destroy' in entity.sprite && typeof (entity.sprite as any).destroy === 'function') {
-        (entity.sprite as any).destroy();
-      }
-      world.destroyEntity(entityId);
+      this.destroyScrap(world, spatialGrid, entity);
     }
   }
 }
