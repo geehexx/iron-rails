@@ -10,10 +10,20 @@ export class World {
     return entity;
   }
 
-  destroyEntity(id: EntityId): void {
+  getEntity(id: EntityId): Entity | undefined {
+    return this.entities.get(id);
+  }
+
+  removeEntity(id: EntityId): boolean {
     const entity = this.entities.get(id);
-    if (entity?.sprite) entity.sprite.destroy();
+    if (!entity) return false;
+    if (entity.sprite) entity.sprite.destroy();
     this.entities.delete(id);
+    return true;
+  }
+
+  destroyEntity(id: EntityId): void {
+    this.removeEntity(id);
   }
 
   getEntitiesByType(type: Entity['type']): Entity[] {
@@ -21,6 +31,9 @@ export class World {
   }
 
   clear(): void {
-    this.entities.forEach((e, id) => this.destroyEntity(id));
+    const ids = Array.from(this.entities.keys());
+    for (const id of ids) {
+      this.destroyEntity(id);
+    }
   }
 }
