@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "Iron Rails is a 2D side-scrolling auto-battler web game where you manage a steampunk train fighting through a zombie apocalypse.",
   "main": "index.js",
   "directories": {
