@@ -1118,3 +1118,13 @@ src/
 
 15. **Weapon Balance**: Should all weapons be viable, or should some be strictly better (progression)?
     - **DECISION**: All viable with different use cases (Gatling for swarms, Cannon for tough enemies)
+
+---
+
+## Session Notes (2025-11-07)
+
+**Phase 0-2 Complete**: PR #15 ready for merge
+- All critical issues resolved (type safety, damage cascade, test structure)
+- 58 tests passing, 100% coverage for new systems
+- All review feedback addressed
+- Next session: Begin Phase 3 (State Management & Persistence)
