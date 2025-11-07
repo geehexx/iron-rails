@@ -1,66 +1,105 @@
-# Iron Rails - Project Structure
+# Project Structure
 
 ## Directory Organization
 
-### Core Source Code (`src/`)
-- **`components/`** - Data-only component interfaces for ECS architecture
-  - Combat.ts, Health.ts, Scrap.ts, Transform.ts, Velocity.ts
-- **`ecs/`** - Entity-Component-System core framework
-  - Entity.ts, World.ts - Core ECS implementation
-- **`scenes/`** - Phaser game scenes for different game states
-  - BootScene.ts, GameScene.ts, UpgradeScene.ts
-- **`state/`** - Game state management and data persistence
-  - GameState.ts, UpgradeDefinitions.ts
-- **`systems/`** - Game logic processors that operate on components
-  - CombatSystem.ts, MovementSystem.ts, PlayerSystem.ts, ScrapSystem.ts, SpatialGrid.ts, SpawnerSystem.ts, UISystem.ts
-- **`__tests__/`** - Unit tests for core systems and components
+```
+iron-rails/
+├── src/                    # Source code
+│   ├── components/         # ECS component definitions (data-only)
+│   ├── ecs/               # Entity-Component-System core
+│   ├── scenes/            # Phaser game scenes
+│   ├── state/             # Game state management & persistence
+│   ├── systems/           # Game logic processors
+│   ├── __tests__/         # Unit tests
+│   └── main.ts            # Application entry point
+├── docs/                  # Documentation
+│   ├── adr/              # Architecture Decision Records
+│   ├── gdd/              # Game Design Documents
+│   ├── initiatives/      # Project initiatives tracking
+│   └── technical_analysis/ # Technical documentation
+├── .github/workflows/     # CI/CD configuration
+└── [config files]         # Build and tooling configuration
+```
 
-### Documentation (`docs/`)
-- **`adr/`** - Architectural Decision Records
-- **`gdd/`** - Game Design Documents
-- **`initiatives/`** - Project planning and feature tracking
-- **`technical_analysis/`** - Technical implementation analysis
+## Core Components
 
-### Configuration Files
-- **`package.json`** - Node.js dependencies and scripts
-- **`tsconfig.json`** - TypeScript compiler configuration
-- **`vite.config.ts`** - Vite build tool configuration
-- **`vitest.config.ts`** - Testing framework configuration
+### ECS Architecture (Entity-Component-System)
 
-## Core Components & Relationships
+**Components** (`src/components/`)
+- Data-only interfaces with no logic
+- `Combat.ts`: Combat-related data (damage, fire rate, range)
+- `Health.ts`: Health and armor data
+- `Scrap.ts`: Economy/resource data
+- `Transform.ts`: Position data
+- `Velocity.ts`: Movement data
 
-### ECS Architecture Pattern
-- **Entities**: Game objects (train, enemies, projectiles)
-- **Components**: Data containers (Health, Transform, Combat)
-- **Systems**: Logic processors that operate on entities with specific components
+**ECS Core** (`src/ecs/`)
+- `Entity.ts`: Entity management and component attachment
+- `World.ts`: Entity container and query system
 
-### Scene Management
-- **BootScene**: Initial loading and setup
-- **GameScene**: Main gameplay loop and rendering
-- **UpgradeScene**: Between-run upgrade interface
+**Systems** (`src/systems/`)
+- Pure logic processors operating on components
+- `CombatSystem.ts`: Combat logic and damage calculation
+- `MovementSystem.ts`: Physics and movement
+- `PlayerSystem.ts`: Player-specific logic
+- `ScrapSystem.ts`: Economy and resource collection
+- `SpawnerSystem.ts`: Enemy spawning logic
+- `SpatialGrid.ts`: Spatial partitioning for efficient targeting
+- `UISystem.ts`: UI updates and rendering
+
+### Game Scenes (Phaser)
+
+**Scenes** (`src/scenes/`)
+- `BootScene.ts`: Initial loading and setup
+- `GameScene.ts`: Main gameplay scene
+- `UpgradeScene.ts`: Upgrade station interface
 
 ### State Management
-- **GameState**: Centralized game state with persistence
-- **UpgradeDefinitions**: Configuration for upgrade system
 
-### System Interactions
-- **SpatialGrid**: Efficient collision detection and targeting
-- **CombatSystem**: Handles damage, projectiles, and combat logic
-- **MovementSystem**: Physics and position updates
-- **SpawnerSystem**: Enemy generation and wave management
-- **ScrapSystem**: Resource collection and economy
-- **UISystem**: Interface updates and user feedback
+**State** (`src/state/`)
+- `GameState.ts`: Persistent game state with localStorage
+- `UpgradeDefinitions.ts`: Upgrade configurations and metadata
 
 ## Architectural Patterns
 
 ### Entity-Component-System (ECS)
-Separates data (components) from logic (systems) for flexible, maintainable game architecture.
-
-### Scene-Based State Management
-Uses Phaser's scene system for clear separation of game states and UI contexts.
+- Separation of data (components) from logic (systems)
+- Composition over inheritance
+- Query-based entity processing
+- Documented in ADR-0004
 
 ### Spatial Partitioning
-Implements grid-based spatial partitioning for efficient collision detection and enemy targeting.
+- Grid-based spatial indexing for efficient collision detection
+- Optimizes targeting and proximity queries
+- Documented in ADR-0003
 
-### Persistent State
-Game state and upgrades persist across sessions using browser storage.
+### State Persistence
+- Centralized game state management
+- localStorage for persistent upgrades and progress
+- Immutable state updates
+
+### Scene Management
+- Phaser scene system for game flow
+- Scene transitions between gameplay and upgrades
+- Separation of concerns per scene
+
+## Component Relationships
+
+```
+GameScene
+├── World (ECS)
+│   ├── Entities (Player, Enemies)
+│   └── Components (Health, Combat, Transform, etc.)
+├── Systems
+│   ├── PlayerSystem → MovementSystem
+│   ├── SpawnerSystem → CombatSystem
+│   ├── CombatSystem → SpatialGrid
+│   └── ScrapSystem → GameState
+└── UISystem → GameState
+```
+
+## Testing Structure
+
+- Unit tests in `src/__tests__/`
+- Test coverage for systems and state management
+- Vitest framework with jsdom for DOM testing

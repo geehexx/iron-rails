@@ -1,38 +1,46 @@
-# Iron Rails - Product Overview
+# Product Overview
 
 ## Project Purpose
-Iron Rails is a 2D side-scrolling auto-battler web game where players manage a steampunk train fighting through a zombie apocalypse. The game combines automatic combat mechanics with strategic resource management and progressive upgrade systems.
 
-## Key Features & Capabilities
+Iron Rails is a 2D side-scrolling auto-battler web game where players manage a steampunk train fighting through a zombie apocalypse. The game combines automatic combat mechanics with strategic upgrade decisions to create an engaging progression-based experience.
+
+## Key Features
 
 ### Core Gameplay
-- **Automatic Combat System**: Train auto-fires at nearby enemies without manual intervention
-- **Progressive Difficulty**: Distance to next station increases each level, creating escalating challenge
-- **Real-time Physics**: Train movement with realistic acceleration and momentum
+- **Automatic Combat System**: Train automatically fires at nearby enemies without manual input
+- **Progressive Difficulty**: Distance to next station increases with each level, scaling challenge
+- **Economy Loop**: Collect scrap from defeated enemies to fund permanent upgrades
+- **Upgrade Station**: Strategic upgrade choices between runs for permanent stat improvements
 
-### Economy & Progression
-- **Scrap Collection**: Gather resources from defeated enemies
-- **Upgrade Station**: Permanent upgrades between runs using collected scrap
-- **Persistent Progression**: Upgrades carry over between game sessions
+### Combat & Movement
+- **Auto-targeting**: Enemies are automatically engaged within range
+- **Train Physics**: Realistic acceleration and deceleration mechanics
+- **Health System**: HP management with regeneration capabilities
 
-### Available Upgrades
+### Quality of Life
+- **Pause/Resume**: P key to pause game action
+- **Game Speed Controls**: Adjust speed between 1x and 2x using +/- keys
+- **Event Notifications**: Visual feedback for game events
+- **Health Regeneration**: Passive healing over time
+
+### Upgrade System
+Available permanent upgrades include:
 - **Max HP**: Increase maximum health capacity
 - **Armor Plating**: Reduce incoming damage
-- **Repair System**: Regenerate HP over time
-- **Max Speed**: Increase top movement speed
-- **Acceleration**: Faster speed recovery and momentum building
-
-### Quality of Life Features
-- **Pause/Resume**: P key for game control
-- **Variable Game Speed**: +/- keys for 1x, 2x speed control
-- **Event Notifications**: Real-time feedback system
-- **Health Regeneration**: Automatic healing mechanics
+- **Repair System**: Enhance HP regeneration rate
+- **Max Speed**: Increase train's top speed
+- **Acceleration**: Improve speed recovery rate
 
 ## Target Users
-- Casual gamers who enjoy auto-battler mechanics
-- Players interested in steampunk/post-apocalyptic themes
-- Fans of incremental progression and upgrade systems
-- Web game enthusiasts looking for browser-based entertainment
 
-## Value Proposition
-Iron Rails delivers an engaging auto-battler experience that balances strategic decision-making with relaxed gameplay. Players can focus on long-term progression and upgrade optimization while enjoying automatic combat mechanics that don't require constant micro-management.
+- **Casual Gamers**: Simple auto-battler mechanics with minimal input required
+- **Strategy Enthusiasts**: Deep upgrade system for optimization and planning
+- **Incremental Game Fans**: Progression-based gameplay with permanent upgrades
+- **Steampunk/Zombie Genre Fans**: Unique thematic combination
+
+## Use Cases
+
+- Quick gaming sessions with pause/resume functionality
+- Long-term progression through upgrade system
+- Strategic planning for optimal upgrade paths
+- Casual entertainment with automatic combat mechanics

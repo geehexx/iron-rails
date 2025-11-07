@@ -1,117 +1,326 @@
-# Iron Rails - Development Guidelines
+# Development Guidelines
 
 ## Code Quality Standards
 
-### TypeScript Conventions
-- **Strict Type Checking**: All code uses strict TypeScript with `noUncheckedIndexedAccess` enabled
-- **Interface Definitions**: Use interfaces for data structures (e.g., `PlayerUpgrades`, `GameStateData`)
-- **Type Safety**: Explicit typing for function parameters and return values
-- **Null Safety**: Consistent null/undefined checks using optional chaining (`?.`) and logical operators
+### TypeScript Strict Mode
+- **Strict type checking enabled**: All code must pass TypeScript strict mode
+- **No unchecked indexed access**: Array/object access must be validated
+- **Explicit return types**: Public methods should declare return types
+- **Non-null assertions avoided**: Use optional chaining (`?.`) and nullish coalescing (`??`)
 
 ### Naming Conventions
 - **Classes**: PascalCase (e.g., `GameScene`, `CombatSystem`, `SpatialGrid`)
-- **Methods/Functions**: camelCase (e.g., `togglePause`, `calculateUpgradeCost`, `findNearestEnemy`)
-- **Constants**: UPPER_SNAKE_CASE (e.g., `EXPLOSION_RADIUS`, `STORAGE_KEY`, `SAVE_VERSION`)
-- **Private Methods**: Prefixed with `private` keyword and camelCase (e.g., `private setupKeyboardControls`)
+- **Interfaces**: PascalCase (e.g., `PlayerUpgrades`, `GameStateData`, `UpgradeConfig`)
+- **Variables/Functions**: camelCase (e.g., `gameState`, `enemiesKilled`, `calculateUpgradeCost`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `DEFAULT_STATE`, `STORAGE_KEY`, `EXPLOSION_RADIUS`)
+- **Private fields**: Prefix with `private` keyword, use camelCase (e.g., `private world`, `private armorMultiplier`)
 
-### Documentation Standards
-- **JSDoc Comments**: Comprehensive documentation for public methods and complex logic
-- **Inline Comments**: Explain business logic and non-obvious implementations
-- **Parameter Documentation**: Document function parameters with types and descriptions
-- **Return Value Documentation**: Clear documentation of return types and meanings
+### File Organization
+- **One class per file**: Each class/system in its own file
+- **Imports at top**: All imports grouped at file start
+- **Export pattern**: Single default or named export per file
+- **File naming**: Match class name (e.g., `GameScene.ts`, `CombatSystem.ts`)
 
 ## Architectural Patterns
 
-### Entity-Component-System (ECS) Implementation
-- **Entity Creation**: Use `world.createEntity(type)` with consistent type strings
-- **Component Assignment**: Direct property assignment (e.g., `entity.transform = { x, y, rotation }`)
-- **System Processing**: Systems operate on entities with specific component combinations
-- **Component Interfaces**: Data-only interfaces in `components/` directory
+### Entity-Component-System (ECS)
 
-### State Management Patterns
-- **Centralized State**: Single `GameState` class manages all persistent data
-- **Immutable Updates**: Return copies of state objects to prevent mutation
-- **Persistence Layer**: Automatic save/load with versioning and checksum validation
-- **Default Values**: Comprehensive default state definitions with proper object spreading
+**Component Pattern** (5/5 files follow):
+```typescript
+// Components are pure data interfaces with no methods
+export interface Health {
+  current: number;
+  max: number;
+}
 
-### Scene Architecture
-- **Scene Lifecycle**: Proper `init()`, `create()`, and `update()` method implementations
-- **Data Passing**: Use scene data parameter for state transfer between scenes
-- **System Initialization**: Initialize all systems in `create()` method
-- **Cleanup**: Proper entity cleanup and memory management
+export interface Combat {
+  damage: number;
+  range: number;
+  fireRate: number;
+  lastFired: number;
+}
+```
 
-## System Design Patterns
+**System Pattern** (5/5 files follow):
+```typescript
+// Systems contain logic and operate on entities with specific components
+export class CombatSystem {
+  update(world: World, time: number, delta: number, spatialGrid: SpatialGrid): void {
+    const train = world.getEntitiesByType('train')[0];
+    if (!train?.combat || !train.transform) return;
+    // System logic here
+  }
+}
+```
 
-### Spatial Partitioning
-- **Grid-Based**: Use `SpatialGrid` for efficient collision detection and queries
-- **Entity Tracking**: Insert/remove entities from spatial grid on position changes
-- **Range Queries**: Use `queryRadius()` for proximity-based operations
-- **Performance**: Avoid O(n²) collision checks through spatial optimization
+**Entity Access Pattern** (5/5 files follow):
+```typescript
+// Always validate component existence before use
+const train = world.getEntitiesByType('train')[0];
+if (!train?.transform || !train.health) return;
+```
 
-### Combat System Design
-- **Callback Architecture**: Use callbacks for event handling (e.g., `onEnemyKilled`)
-- **Damage Calculation**: Apply armor multipliers and damage scaling consistently
-- **Range Checking**: Use squared distance comparisons to avoid expensive sqrt operations
-- **State Validation**: Check entity existence and required components before operations
+### State Management
 
-### Input Handling
-- **Keyboard Events**: Use Phaser's keyboard event system with specific key bindings
-- **State Toggles**: Implement pause/resume with proper time scale management
-- **Speed Control**: Cycle through predefined speed values with user feedback
-- **Event Feedback**: Provide immediate visual feedback for user actions
+**Immutable Updates** (4/5 files follow):
+```typescript
+// Return copies, never mutate directly
+getUpgrades(): PlayerUpgrades {
+  return { ...this.data.upgrades };
+}
+
+// Spread operator for object cloning
+this.data = {
+  ...DEFAULT_STATE,
+  upgrades: { ...DEFAULT_STATE.upgrades }
+};
+```
+
+**Persistence Pattern** (3/5 files follow):
+```typescript
+// Save after state mutations
+addScrap(amount: number): void {
+  this.data.scrap += amount;
+  this.save();
+}
+
+// Versioned save format with checksum
+const saveData = {
+  version: SAVE_VERSION,
+  timestamp: Date.now(),
+  data: this.data,
+  checksum: this.checksum(dataString)
+};
+```
+
+### Phaser Scene Lifecycle
+
+**Initialization Pattern** (5/5 files follow):
+```typescript
+constructor() { super('GameScene'); }
+
+init(data?: { gameState?: GameState }) {
+  // Initialize scene-specific state
+  this.gameState = data?.gameState || new GameState();
+  this.isPaused = false;
+}
+
+create() {
+  // Create game objects and systems
+  this.world = new World();
+  this.combat = new CombatSystem();
+}
+
+update(time: number, delta: number): void {
+  // Game loop logic
+  if (this.gameOver) return;
+  if (this.isPaused) return;
+}
+```
+
+## Common Implementation Patterns
+
+### Dependency Injection (4/5 files)
+```typescript
+// Pass dependencies via constructor
+constructor(
+  private onEnemyKilled?: (enemyId: EntityId, x: number, y: number) => void
+) {}
+
+// Callback pattern for cross-system communication
+this.combat = new CombatSystem((enemyId, x, y) => {
+  this.enemiesKilled++;
+  this.scrapSystem.spawnScrap(x, y, this.world, this, this.spatialGrid);
+});
+```
+
+### Guard Clauses (5/5 files)
+```typescript
+// Early returns for invalid states
+if (this.gameOver) return;
+if (this.isPaused) return;
+if (!train?.transform || !train.health) return;
+if (time - train.combat.lastFired < train.combat.fireRate) return;
+```
+
+### Squared Distance Optimization (3/5 files)
+```typescript
+// Avoid Math.sqrt by comparing squared distances
+const dx = entity.transform.x - x;
+const dy = entity.transform.y - y;
+const distSq = dx * dx + dy * dy;
+
+if (distSq < minDistSq) {
+  minDistSq = distSq;
+  nearest = id;
+}
+```
+
+### Configuration Objects (4/5 files)
+```typescript
+// Centralized configuration with metadata
+export interface UpgradeConfig {
+  name: string;
+  description: string;
+  baseCost: number;
+  costGrowth: number;
+  effectPerLevel: number;
+  maxLevel: number;
+  statKey: keyof PlayerUpgrades;
+  format: (value: number) => string;
+}
+
+export const UPGRADES: Record<string, UpgradeConfig> = {
+  maxHp: { /* config */ },
+  armor: { /* config */ }
+};
+```
+
+### Clamping and Validation (4/5 files)
+```typescript
+// Clamp values to valid ranges
+this.armorMultiplier = Math.max(0, 1.0 - Math.min(armorValue, 1.0));
+train.health.current = Math.max(0, train.health.current - scaledDamage);
+
+// Validate before use
+if (armorValue < 0) {
+  console.warn(`negative armorValue ${armorValue} clamped to 0`);
+  armorValue = 0;
+}
+```
 
 ## Testing Standards
 
-### Unit Test Structure
-- **Test Organization**: Group tests by functionality using `describe` blocks
-- **Setup/Teardown**: Use `beforeEach`/`afterEach` for consistent test isolation
-- **Assertion Clarity**: Use descriptive test names and clear expectations
-- **Edge Cases**: Test boundary conditions and error scenarios
+### Test Structure (Vitest)
+```typescript
+describe('ComponentName', () => {
+  let instance: ComponentType;
 
-### Test Coverage Areas
-- **State Management**: Currency operations, upgrade purchases, level progression
-- **Persistence**: Save/load functionality with data integrity checks
-- **Business Logic**: Game mechanics and calculation functions
-- **Error Handling**: Invalid input and edge case scenarios
+  beforeEach(() => {
+    // Setup fresh state
+    localStorage.clear();
+    instance = new ComponentType();
+  });
 
-## Performance Optimization
+  afterEach(() => {
+    // Cleanup
+    localStorage.clear();
+  });
 
-### Efficient Algorithms
-- **Spatial Queries**: Use grid-based spatial partitioning for collision detection
-- **Distance Calculations**: Use squared distance to avoid expensive square root operations
-- **Entity Cleanup**: Remove off-screen entities to prevent memory leaks
-- **Time-Based Updates**: Use delta time for frame-rate independent updates
+  describe('Feature Group', () => {
+    it('should describe expected behavior', () => {
+      // Arrange, Act, Assert
+      expect(result).toBe(expected);
+    });
+  });
+});
+```
 
-### Memory Management
-- **Entity Lifecycle**: Proper creation and destruction of game entities
-- **Event Cleanup**: Remove event listeners and callbacks when no longer needed
-- **Object Pooling**: Consider object pooling for frequently created/destroyed entities
-- **Reference Management**: Avoid circular references and memory leaks
+### Test Coverage Priorities
+- **State management**: All mutations and persistence
+- **System logic**: Core game mechanics
+- **Edge cases**: Boundary conditions and invalid inputs
+- **Integration**: Cross-system interactions
 
-## Error Handling Patterns
+## Documentation Standards
 
-### Defensive Programming
-- **Input Validation**: Validate parameters and clamp values to acceptable ranges
-- **Null Checks**: Consistent null/undefined checking before property access
-- **Graceful Degradation**: Handle missing components or entities gracefully
-- **Console Logging**: Use appropriate log levels for debugging and warnings
+### JSDoc Comments (3/5 files)
+```typescript
+/**
+ * Calculate cost for next level of an upgrade
+ */
+export function calculateUpgradeCost(
+  config: UpgradeConfig,
+  currentLevel: number
+): number {
+  return Math.floor(config.baseCost * Math.pow(config.costGrowth, currentLevel));
+}
 
-### Data Integrity
-- **Save Validation**: Implement checksums and version checking for save data
-- **Fallback Values**: Provide sensible defaults when data is corrupted or missing
-- **Error Recovery**: Reset to known good state when critical errors occur
-- **User Feedback**: Inform users of data issues without exposing technical details
+/**
+ * Set armor damage reduction.
+ * @param armorValue - Armor value between 0.0 (no reduction) and 1.0 (100% reduction, immune).
+ *                     Values > 1.0 are capped at full immunity.
+ */
+setArmor(armorValue: number): void {
+  // Implementation
+}
+```
 
-## Code Organization
+### File Headers (2/5 files)
+```typescript
+/**
+ * GameState manager - Handles player progression, currency, and upgrades
+ * Persists data to localStorage between sessions
+ */
+```
 
-### File Structure
-- **Single Responsibility**: Each file contains one primary class or related functionality
-- **Import Organization**: Group imports by type (external libraries, internal modules)
-- **Export Patterns**: Use named exports for classes and interfaces
-- **Directory Separation**: Separate concerns into appropriate directories (components, systems, scenes)
+### Inline Comments
+- Explain "why" not "what"
+- Document non-obvious logic
+- Clarify complex calculations
+- Note important constraints
 
-### Dependency Management
-- **Minimal Dependencies**: Keep external dependencies to essential libraries only
-- **Version Pinning**: Use specific versions for reproducible builds
-- **Development Tools**: Separate development dependencies from runtime dependencies
-- **Build Configuration**: Maintain consistent build and test configurations
+## Performance Patterns
+
+### Spatial Partitioning (4/5 files)
+```typescript
+// Use spatial grid for efficient proximity queries
+this.spatialGrid.insert(entity.id, x, y);
+const candidates = spatialGrid.queryRadius(x, y, range);
+```
+
+### Time-based Updates (5/5 files)
+```typescript
+// Scale by delta time for frame-rate independence
+const effectiveDelta = delta * this.gameSpeed;
+const deltaSeconds = effectiveDelta / 1000;
+this.distance += train.velocity.vx * deltaSeconds;
+```
+
+### Object Pooling Consideration
+- Cleanup off-screen entities to prevent memory leaks
+- Remove from spatial grid when destroying entities
+
+## Error Handling
+
+### Defensive Programming (5/5 files)
+```typescript
+// Try-catch for I/O operations
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  // Process saved data
+} catch (error) {
+  console.error('Failed to load game state:', error);
+  return DEFAULT_STATE;
+}
+
+// Validate external data
+if (parsed.version !== SAVE_VERSION) {
+  console.warn('Save version mismatch, using defaults');
+  return DEFAULT_STATE;
+}
+```
+
+### Console Logging
+- `console.log()`: State changes and important events
+- `console.warn()`: Recoverable issues and validation failures
+- `console.error()`: Critical failures and exceptions
+
+## Code Style Preferences
+
+### Formatting
+- **Indentation**: 2 spaces
+- **Semicolons**: Required
+- **Quotes**: Single quotes for strings
+- **Line length**: Reasonable (no strict limit observed)
+- **Trailing commas**: Not consistently used
+
+### Control Flow
+- Prefer early returns over nested conditionals
+- Use ternary operators for simple conditionals
+- Optional chaining for safe property access
+
+### Type Annotations
+- Explicit types for function parameters
+- Explicit return types for public methods
+- Type inference acceptable for local variables

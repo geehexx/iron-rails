@@ -1,61 +1,75 @@
-# Iron Rails - Technology Stack
+# Technology Stack
 
-## Programming Languages & Versions
-- **TypeScript**: Primary language with strict type checking
-- **JavaScript**: ES modules with modern syntax (ESNext target)
-- **HTML5**: Canvas-based rendering via Phaser
+## Programming Languages
+
+- **TypeScript 5.6.3**: Primary language with strict type checking
+- **JavaScript (ESNext)**: Target compilation output
 
 ## Core Dependencies
-- **Phaser 3.87.0**: Game engine for 2D graphics, physics, and scene management
-- **Vite 6.0.1**: Fast build tool and development server
-- **Vitest 2.1.9**: Unit testing framework with TypeScript support
+
+### Game Framework
+- **Phaser 3.87.0**: 2D game framework for rendering, physics, and scene management
 
 ## Development Dependencies
-- **TypeScript 5.6.3**: Type checking and compilation
-- **Husky 9.1.7**: Git hooks for code quality
+
+### Build Tools
+- **Vite 6.0.1**: Fast build tool and dev server
+- **TypeScript Compiler**: Type checking and compilation
+
+### Testing
+- **Vitest 2.1.9**: Unit testing framework
+- **jsdom 27.1.0**: DOM implementation for testing
+
+### Code Quality
+- **Husky 9.1.7**: Git hooks management
 - **lint-staged 16.2.6**: Pre-commit linting
-- **markdownlint-cli2 0.18.1**: Documentation linting
-- **jsdom 27.1.0**: DOM simulation for testing
+- **markdownlint-cli2 0.18.1**: Markdown linting
 
-## Build System & Configuration
+## TypeScript Configuration
 
-### TypeScript Configuration
-- **Target**: ESNext for modern JavaScript features
-- **Module System**: ESNext with bundler resolution
-- **Strict Mode**: Enabled with noUncheckedIndexedAccess
-- **Output**: ./dist directory
-
-### Vite Configuration
-- **Module Resolution**: Bundler-based for optimal tree shaking
-- **Development Server**: Hot module replacement enabled
-- **Build Output**: Optimized production bundles
-
-### Testing Setup
-- **Framework**: Vitest with jsdom environment
-- **Coverage**: Built-in coverage reporting
-- **TypeScript**: Native TypeScript support without compilation step
+### Compiler Options
+- **Target**: ESNext
+- **Module**: ESNext with bundler resolution
+- **Strict Mode**: Enabled
+- **noUncheckedIndexedAccess**: Enabled for array safety
+- **Library**: ESNext + DOM
+- **Output**: `./dist`
+- **Root**: `./src`
 
 ## Development Commands
 
-### Primary Commands
 ```bash
-npm run dev     # Start development server at localhost:5173
-npm test        # Run unit tests with Vitest
-npm run build   # Production build with TypeScript compilation
-npm run preview # Preview production build locally
+npm run dev      # Start development server (localhost:5173)
+npm run build    # Production build (TypeScript + Vite)
+npm run preview  # Preview production build
+npm test         # Run unit tests with Vitest
 ```
 
-### Quality Assurance
-- **Pre-commit Hooks**: Automatic markdown linting via Husky
-- **Lint Staged**: Only lint changed files for performance
-- **TypeScript Strict**: Comprehensive type checking enabled
+## Build System
 
-## Browser Compatibility
-- **Target**: Modern browsers supporting ES modules
-- **Canvas**: HTML5 Canvas API via Phaser
-- **Storage**: LocalStorage for game state persistence
+- **Module Type**: ES Modules
+- **Bundler**: Vite with TypeScript support
+- **Output**: Optimized production bundle in `dist/`
+
+## Version Control
+
+- **Git**: Version control
+- **GitHub**: Repository hosting
+- **CI/CD**: GitHub Actions workflow (`.github/workflows/ci.yml`)
 
 ## Development Environment
-- **Node.js**: Required for package management and build tools
-- **Git**: Version control with automated quality checks
-- **IDE Support**: Full TypeScript intellisense and debugging
+
+- **Entry Point**: `index.html` → `src/main.ts`
+- **Dev Server**: Vite dev server with HMR
+- **Type Checking**: Strict TypeScript with no unchecked indexed access
+
+## Code Quality Tools
+
+- **Pre-commit Hooks**: Automatic markdown linting via Husky
+- **Markdown Standards**: Enforced via markdownlint-cli2
+- **Configuration Files**:
+  - `.markdownlint.json`: Markdown rules
+  - `.markdownlintignore`: Excluded files
+  - `tsconfig.json`: TypeScript configuration
+  - `vite.config.ts`: Vite build configuration
+  - `vitest.config.ts`: Test configuration
